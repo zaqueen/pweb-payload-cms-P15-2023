@@ -12,8 +12,10 @@ const Log = {
         required: true,
       },
       {
-        name: "action",
-        type: "text",
+        name: 'action',
+        label: 'Action',
+        type: 'select',
+        options: ['Create', 'Update', 'Delete'],
         required: true,
       },
       {
