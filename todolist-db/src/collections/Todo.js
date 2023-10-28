@@ -26,19 +26,16 @@ const Todo = {
       {
         name: 'status',
         label: 'Status',
-        type: 'select',
-        options: ['Todo', 'In_Progress', 'Done'],
-        required: true,
+        type: 'text',
+        defaultValue: "false"
       },
       {
         name: 'priority',
-        type: 'relationship',
-        required: true,
-        relationTo: 'Category',
-        
+        type: 'text',
+        // required: true,
+        // relationTo: 'Category',
       },
     ],
   };
   
   export default Todo;
-  

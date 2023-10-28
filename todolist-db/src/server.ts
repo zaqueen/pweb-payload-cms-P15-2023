@@ -24,4 +24,13 @@ const start = async () => {
   app.listen(3000)
 }
 
+var cors = require('cors');
+var corsOptions = {
+  origin: 'http://localhost:8081',
+  credentials: true,
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
+
 start()
