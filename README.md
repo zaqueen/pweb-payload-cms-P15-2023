@@ -1,4 +1,9 @@
-# Payload Blank Template
+# Praktikum PemWeb Todolist Dengan Payload.CMS
+
+# Kelompok P15
+1. Monika Damelia Hutapea (5027221011)
+2. Etha Felisya Br Purba (5027221017)
+3. Mochamad Zidan Hadipratama (5027221052)
 
 A blank template for [Payload](https://github.com/payloadcms/payload) to help you get up and running quickly. This repo may have been created by running `npx create-payload-app` and selecting the "blank" template or by cloning this template on [Payload Cloud](https://payloadcms.com/new/clone/blank).
 
