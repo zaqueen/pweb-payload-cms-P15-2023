@@ -1,8 +1,8 @@
 <template>
   <div class="wrapp round basic-shadow flex column" :class="{
-    'border-red': task.priority === 'high',
-    'border-yellow': task.priority === 'med',
-    'border-green': task.priority === 'low',
+    'border-red': task.prio === 'high',
+    'border-yellow': task.prio === 'medium',
+    'border-green': task.prio === 'low',
   }" ref="taskComponent">
     <taskDetail :task="task" v-show="taskDetail" @tutup="tutup" class="detail" @ngapus="ngapus" @done="markAsDone"/>
     <div class="wrap-atas flex column" :class="{'low-opacity': this.status }">
@@ -17,12 +17,12 @@
     <button
       class="button extreme-round done"
       :class="{
-        'border-red': task.priority === 'high' && !isHovered,
-        'border-yellow': task.priority === 'med' && !isHovered,
-        'border-green': task.priority === 'low' && !isHovered,
-        'bg-red': task.priority === 'high' && isHovered,
-        'bg-yellow': task.priority === 'med' && isHovered,
-        'bg-green': task.priority === 'low' && isHovered,
+        'border-red': task.prio === 'high' && !isHovered,
+        'border-yellow': task.prio === 'medium' && !isHovered,
+        'border-green': task.prio === 'low' && !isHovered,
+        'bg-red': task.prio === 'high' && isHovered,
+        'bg-yellow': task.prio === 'medium' && isHovered,
+        'bg-green': task.prio === 'low' && isHovered,
         'low-opacity': this.status
       }"
       @mouseenter="isHovered = true"
@@ -37,6 +37,7 @@
 <script>
 import taskEdit from '@/components/taskEdit.vue';
 import taskDetail from '@/components/taskDetail.vue';
+
 import axios from 'axios';
 
 export default {
@@ -44,7 +45,9 @@ export default {
     return {
       isHovered: false,
       taskDetail: false,
-      status: null
+      status: null,
+      prio: null,
+      Priority: []
     };
   },
   props: {
@@ -52,8 +55,9 @@ export default {
   },
   methods: {
     markAsDone() {
-      this.task.status=true
-      axios.put(`http://localhost:3000/api/Todo/${this.task.id}`, this.task)
+      this.task.status="true"
+      this.task.priority=this.task.priority.id
+      axios.patch(`http://localhost:3000/api/Todo/${this.task.id}`, this.task)
       .then(response => {
           console.log('Task updated:', response.data);
       })
@@ -96,6 +100,7 @@ export default {
     }else{
       this.status=true
     }
+    console.log(this.task)
   },
   beforeUnmount() {
     document.removeEventListener('click', this.openTaskDetail);

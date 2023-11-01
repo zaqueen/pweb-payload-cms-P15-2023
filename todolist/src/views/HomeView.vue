@@ -4,15 +4,15 @@
       <navBar @nginput="this.input=!this.input" class="masuk"/>
     </div>
     <div class="absolute" :class="{'nginput': input}">
-      <inputTask v-if="input" @done="filterData(this.priority)" class="masuk"/>
+      <inputTask v-if="input" @done="filterData(this.prio)" class="masuk"/>
     </div>
     <div class="wrappp flex column" @click="this.input=false">
       <div class="buton flex xcenter ycenter">
-          <div class="extreme-round all basic-shadow button" @click="filterData('all')" :class="{'bg-blue':this.priority==='all', 'border-blue':this.priority!=='all'}">All</div>
-          <div class="extreme-round high basic-shadow button" @click="filterData('high')" :class="{'bg-red':this.priority==='high', 'border-red':this.priority!=='high'}">High</div>
-          <div class="extreme-round medium basic-shadow button" @click="filterData('med')" :class="{'bg-yellow':this.priority==='med', 'border-yellow':this.priority!=='med'}">Medium</div>
-          <div class="extreme-round low basic-shadow button" @click="filterData('low')" :class="{'bg-green':this.priority==='low', 'border-green':this.priority!=='low'}">Low</div>
-          <div class="extreme-round done basic-shadow button" @click="filterData('done')" :class="{'bg-blue':this.priority==='done', 'border-blue':this.priority!=='done'}">Done</div>
+          <div class="extreme-round all basic-shadow button" @click="filterData('all')" :class="{'bg-blue':this.prio==='all', 'border-blue':this.prio!=='all'}">All</div>
+          <div class="extreme-round high basic-shadow button" @click="filterData('high')" :class="{'bg-red':this.prio==='high', 'border-red':this.prio!=='high'}">High</div>
+          <div class="extreme-round medium basic-shadow button" @click="filterData('medium')" :class="{'bg-yellow':this.prio==='medium', 'border-yellow':this.prio!=='medium'}">Medium</div>
+          <div class="extreme-round low basic-shadow button" @click="filterData('low')" :class="{'bg-green':this.prio==='low', 'border-green':this.prio!=='low'}">Low</div>
+          <div class="extreme-round done basic-shadow button" @click="filterData('done')" :class="{'bg-blue':this.prio==='done', 'border-blue':this.prio!=='done'}">Done</div>
       </div>
       <div class="task flex" >
         <task
@@ -43,53 +43,53 @@ export default {
     return{
       taskData: [],
       input: false,
-      priority: "all",
+      prio: "all",
     }
   },
   computed: {
     sortingTaskData() {
-      // Sort the taskData array based on priority and status
-      const copyOfTaskData = [...this.taskData];
-      return copyOfTaskData.sort((a, b) => {
-        // Compare priority first
-        if (a.priority === "high" && b.priority !== "high") return -1;
-        if (a.priority !== "high" && b.priority === "high") return 1;
-        if (a.priority === "med" && b.priority === "low") return -1;
-        if (a.priority === "low" && b.priority === "med") return 1;
+      // Sort the taskData array based on prio and status
+      return this.taskData.sort((a, b) => {
+        // Compare prio first
+        if (a.prio === "high" && b.prio !== "high") return -1;
+        if (a.prio !== "high" && b.prio === "high") return 1;
+        if (a.prio === "medium" && b.prio === "low") return -1;
+        if (a.prio === "low" && b.prio === "medium") return 1;
 
-        // If priority is the same, compare status
+        // If prio is the same, compare status
         if (a.status === true && b.status === false) return -1;
         if (a.status === false && b.status === true) return 1;
 
-        // If both priority and status are the same, maintain their original order
+        // If both prio and status are the same, maintain their original order
         return 0;
       });
     },
     filteredTaskData() {
-      if (this.priority === 'all') {
+      if (this.prio === 'all') {
         return this.taskData; // Show all tasks
-      } else if (this.priority === 'done') {
-        return this.taskData.filter((task) => task.status === true); // Show completed tasks
+      } else if (this.prio === 'done') {
+        return this.taskData.filter((task) => task.status === "true"); // Show completed tasks
       } else {
-        return this.taskData.filter((task) => task.priority === this.priority); // Show tasks with the selected priority
+        return this.taskData.filter((task) => task.prio === this.prio); // Show tasks with the selected prio
       }
     }
   },
   methods:{
-    retrieveFormData() {
+    async retrieveFormData() {
       // Iterate through localStorage keys
-      axios.get('http://localhost:3000/api/Todo')
+      await axios.get('http://localhost:3000/api/Todo')
         .then(response => {
           // Assign the fetched data to the todoList array
           this.taskData = response.data.docs;
-          console.log(this.taskData[0])
-          console.log("status: ")
-          console.log(this.taskData[0].status)
+          // console.log(this.taskData[0])
+          // console.log("status: ")
+          // console.log(this.taskData[0].status)
         })
         .catch(error => {
           console.error('Error fetching data:', error);
         });
-      console.log("jalan gk?")
+      
+      // console.log("di dalam retrieve", this.taskData)
     },
     markTaskAsDone(taskId) {
     // Find the task with the matching ID
@@ -98,7 +98,7 @@ export default {
       // Check if the task exists
       if (taskToUpdate) {
         // Update the task's status to true
-        taskToUpdate.status = true;
+        taskToUpdate.status = "true";
 
         // Send a PUT request to update the task in your Payload CMS
         axios.put(`http://localhost:3000/api/Todo/${taskToUpdate.id}`, taskToUpdate)
@@ -109,6 +109,7 @@ export default {
             console.error('Error updating task:', error);
           });
       }
+      // this.retrieveFormData();
     },
     ngapus(taskId) {
       // Send a DELETE request to remove the task from your Payload CMS
@@ -122,6 +123,7 @@ export default {
         .catch(error => {
           console.error('Error deleting task:', error);
         });
+      // this.retrieveFormData();
     },
     closeEditMenuOnClickOutside(event) {
       // Check if the click event target is not within the ".menu" element
@@ -129,25 +131,13 @@ export default {
         this.input = false;
       }
     },
-    filterData(arg){
-      this.priority=arg
-
-      this.taskData=[]
-
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-
-        // Check if the key matches the pattern "formData_"
-        if (key.startsWith('task_')) {
-          // Parse and add the data to the formDataList array
-          const formData = JSON.parse(localStorage.getItem(key));
-          this.taskData.push(formData);
-        }
-      }
-
+    async filterData(arg){
+      this.prio=arg
       this.input=false
-
+      await this.retrieveFormData()
       this.taskData=this.filteredTaskData
+      // console.log(this.taskData[0])
+      // console.log(this.sortingTaskData)
     }
   },
   created() {

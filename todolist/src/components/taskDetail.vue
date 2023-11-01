@@ -1,9 +1,9 @@
 <template>
     <div class="wrap-out">
         <div class="wrap round basic-shadow flex column" :class="{
-            'border-red': task.priority === 'high',
-            'border-yellow': task.priority === 'med',
-            'border-green': task.priority === 'low',
+            'border-red': task.prio === 'high',
+            'border-yellow': task.prio === 'medium',
+            'border-green': task.prio === 'low',
         }">
             <div class="title">
                 <p>Judul Tugas</p>
@@ -14,11 +14,11 @@
                 <textarea v-model="task.description" class="input-desc"></textarea>
             </div>
             <div class="bnyk flex column">
-                <h5>Priority</h5>
+                <h5>prio</h5>
                 <div class="buton flex xcenter ycenter">
-                    <div class="extreme-round high basic-shadow button" @click="this.task.priority='high'" :class="{'bg-red':this.task.priority==='high', 'border-red':this.task.priority!=='high'}">High</div>
-                    <div class="extreme-round medium basic-shadow button" @click="this.task.priority='med'" :class="{'bg-yellow':this.task.priority==='med', 'border-yellow':this.task.priority!=='med'}">Medium</div>
-                    <div class="extreme-round low basic-shadow button" @click="this.task.priority='low'" :class="{'bg-green':this.task.priority==='low', 'border-green':this.task.priority!=='low'}">Low</div>
+                    <div class="extreme-round high basic-shadow button" @click="this.task.prio='high'" :class="{'bg-red':this.task.prio==='high', 'border-red':this.task.prio!=='high'}">High</div>
+                    <div class="extreme-round medium basic-shadow button" @click="this.task.prio='medium'" :class="{'bg-yellow':this.task.prio==='medium', 'border-yellow':this.task.prio!=='medium'}">Medium</div>
+                    <div class="extreme-round low basic-shadow button" @click="this.task.prio='low'" :class="{'bg-green':this.task.prio==='low', 'border-green':this.task.prio!=='low'}">Low</div>
                 </div>
             </div>
             <div class="buton flex xcenter yecenter save">
@@ -44,6 +44,7 @@ import axios from 'axios';
         },
         methods: {
             saveData() {
+                this.task.priority=this.task.priority.id
                 axios.put(`http://localhost:3000/api/Todo/${this.task.id}`, this.task)
                 .then(response => {
                     console.log('Task updated:', response.data);
@@ -59,6 +60,7 @@ import axios from 'axios';
             },
             doneData(){
                 this.task.status=true
+                this.task.priority=this.task.priority.id
                 axios.put(`http://localhost:3000/api/Todo/${this.task.id}`, this.task)
                 .then(response => {
                     console.log('Task updated:', response.data);

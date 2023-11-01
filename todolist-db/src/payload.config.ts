@@ -17,7 +17,6 @@ export default buildConfig({
     bundler: webpackBundler(),
   },
   editor: slateEditor({}),
-  // collections: [Users, Category, Log, Todo],
   collections: [Users, Category, Todo, Log],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

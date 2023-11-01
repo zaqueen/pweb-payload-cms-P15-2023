@@ -13,9 +13,9 @@
             <div class="flex priority column">
                 <h4>Priority</h4>
                 <div class="buton flex xcenter ycenter">
-                    <div class="extreme-round basic-shadow button" @click="this.task.priority='high'" :class="{'bg-red':this.task.priority==='high', 'border-red':this.task.priority!=='high'}">High</div>
-                    <div class="extreme-round medium basic-shadow button" @click="this.task.priority='med'" :class="{'bg-yellow':this.task.priority==='med', 'border-yellow':this.task.priority!=='med'}">Medium</div>
-                    <div class="extreme-round low basic-shadow button" @click="this.task.priority='low'" :class="{'bg-green':this.task.priority==='low', 'border-green':this.task.priority!=='low'}">Low</div>
+                    <div class="extreme-round basic-shadow button" @click="setPriority(this.Priority[2].id)" :class="{'bg-red':this.task.prio==='high', 'border-red':this.task.prio!=='high'}">High</div>
+                    <div class="extreme-round medium basic-shadow button" @click="setPriority(this.Priority[1].id)" :class="{'bg-yellow':this.task.prio==='medium', 'border-yellow':this.task.prio!=='medium'}">Medium</div>
+                    <div class="extreme-round low basic-shadow button" @click="setPriority(this.Priority[0].id)" :class="{'bg-green':this.task.prio==='low', 'border-green':this.task.prio!=='low'}">Low</div>
                 </div>
             </div>
             <button class="extreme-round create basic-shadow button bg-blue text-putih" @click="saveData()">Create</button>
@@ -34,8 +34,9 @@
                     title: null,
                     desc: null,
                     priority: null,
+                    prio: null,
                 },
-                Category: []
+                Priority: []
             }
         },
         methods: {
@@ -45,6 +46,7 @@
                     name: this.task.title,
                     description: this.task.desc,
                     priority: this.task.priority,
+                    prio: this.task.prio,
                     status: false
                 };
 
@@ -58,9 +60,10 @@
                 })
                 .then(response => {
                     // Handle the response, e.g., reset the form fields
-                    this.task.title = '';
-                    this.task.desc = '';
-                    this.task.priority = '';
+                    this.task.title = null;
+                    this.task.desc = null;
+                    this.task.priority = null;
+                    this.task.prio = null;
 
                     console.log(taskData)
 
@@ -70,23 +73,25 @@
                 .catch(error => {
                     console.error('Error:', error);
                 });
+            },
+            setPriority(prioId){
+                const chPrio = this.Priority.find((prio) => prio.id === prioId);
+                this.task.priority=chPrio.id;
+                this.task.prio=chPrio.name
+                // console.log(this.task.priority)
             }
         },
-        created() {
-            axios.get('http://localhost:3000/api/Category/') // Sesuaikan dengan URL endpoint yang sesuai
+        async created() {
+            await axios.get('http://localhost:3000/api/Category/') // Sesuaikan dengan URL endpoint yang sesuai
             .then(response => {
-                this.categories = response.data.docs;
+                this.Priority = response.data.docs;
             })
             .catch(error => {
                 console.error("Error fetching categories:", error);
             });
-            axios.get('http://localhost:3000/api/Todo/')
-            .then(response => {
-                this.todos = response.data;
-            })
-            .catch(error => {
-                console.error("Error fetching todos:", error);
-            });
+
+            // console.log(this.Priority)
+            // console.log(this.Priority[0].id)
         }
     }
 </script>
